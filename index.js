@@ -15,16 +15,17 @@ const puppeteer = require('puppeteer');
 
     // Aguarde até que o usuário esteja logado
     console.log('Por favor, escaneie o QR code e faça login no WhatsApp Web.');
+
+    // Espera até que o QR code desapareça indicando que o login foi concluído
     await page.waitForFunction(() => {
         return document.querySelector('canvas') === null;
     }, { timeout: 0 });
-
     console.log('Login concluído.');
 
     // Navegue até o grupo específico
     const groupName = 'Test';
-    await page.waitForSelector('._3FRCZ'); // Espera pelo seletor da barra de pesquisa
-    await page.type('._3FRCZ', groupName);
+    await page.waitForSelector('[aria-label="Search input textbox"]', { timeout: 30000 }); // Espera pelo seletor da barra de pesquisa
+    await page.type('[aria-label="Search input textbox"]', groupName);
     await page.waitForSelector(`span[title='${groupName}']`, { timeout: 5000 });
     const group = await page.$(`span[title='${groupName}']`);
     if (group) {
@@ -46,8 +47,8 @@ const puppeteer = require('puppeteer');
     async function sendMessages() {
         for (let message of messages) {
             try {
-                await page.waitForSelector('._1awRl.copyable-text.selectable-text', { timeout: 5000 });
-                const messageBox = await page.$('._1awRl.copyable-text.selectable-text');
+                await page.waitForSelector('div[contenteditable="true"]', { timeout: 5000 });
+                const messageBox = await page.$('div[contenteditable="true"]');
                 await messageBox.type(message);
                 await page.keyboard.press('Enter');
                 console.log(`Mensagem enviada: ${message}`);
