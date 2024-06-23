@@ -1,16 +1,29 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
-    const browser = await puppeteer.launch({ headless: false }); // Abre o navegador em modo não-headless para ver as ações
+    // Caminho para o executável do Chrome
+    const chromePath = 'C:/Program Files/Google/Chrome/Application/chrome.exe'; // Atualize este caminho conforme necessário
+
+    const browser = await puppeteer.launch({
+        headless: false,
+        executablePath: chromePath,
+        args: ['--start-maximized']
+    });
+
     const page = await browser.newPage();
     await page.goto('https://web.whatsapp.com');
 
     // Aguarde até que o usuário esteja logado
     console.log('Por favor, escaneie o QR code e faça login no WhatsApp Web.');
-    await page.waitForSelector('._1jJ70', { timeout: 0 }); // Espera pela presença do seletor após o login
+    await page.waitForFunction(() => {
+        return document.querySelector('canvas') === null;
+    }, { timeout: 0 });
+
+    console.log('Login concluído.');
 
     // Navegue até o grupo específico
-    const groupName = 'Nome do Grupo';
+    const groupName = 'Test';
+    await page.waitForSelector('._3FRCZ'); // Espera pelo seletor da barra de pesquisa
     await page.type('._3FRCZ', groupName);
     await page.waitForSelector(`span[title='${groupName}']`, { timeout: 5000 });
     const group = await page.$(`span[title='${groupName}']`);
@@ -22,13 +35,32 @@ const puppeteer = require('puppeteer');
         return;
     }
 
-    // Envie a mensagem
-    const message = 'Sua mensagem específica aqui';
-    await page.waitForSelector('._1awRl.copyable-text.selectable-text');
-    const messageBox = await page.$('._1awRl.copyable-text.selectable-text');
-    await messageBox.type(message);
-    await page.keyboard.press('Enter');
-    console.log(`Mensagem enviada para o grupo: ${groupName}`);
+    // Lista de mensagens a serem enviadas
+    const messages = [
+        'Oiii, tudo bem?',
+        'Espero que sim.',
+        'Criei um canal sobre ciência e espaço.'
+    ];
+
+    // Função para enviar mensagens com pausa entre elas
+    async function sendMessages() {
+        for (let message of messages) {
+            try {
+                await page.waitForSelector('._1awRl.copyable-text.selectable-text', { timeout: 5000 });
+                const messageBox = await page.$('._1awRl.copyable-text.selectable-text');
+                await messageBox.type(message);
+                await page.keyboard.press('Enter');
+                console.log(`Mensagem enviada: ${message}`);
+                await page.waitForTimeout(1000); // Pausa de 1 segundo entre mensagens
+            } catch (error) {
+                console.log(`Erro ao enviar mensagem: ${message}`, error);
+            }
+        }
+    }
+
+    // Enviar mensagens
+    await sendMessages();
+    console.log(`Mensagens enviadas para o grupo: ${groupName}`);
 
     // Feche o navegador
     await browser.close();
