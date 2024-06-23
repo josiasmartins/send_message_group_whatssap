@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 
-const GROUP_NAME = "Test";
+const GROUP_NAME = "🍸𒌋𝑮𝛥𝑳𝛥𝜲";
 const inputSearchEIdentified = 'div[aria-label="Search input textbox"]';
 
 (async () => {
@@ -24,11 +24,14 @@ const inputSearchEIdentified = 'div[aria-label="Search input textbox"]';
     console.log('Login concluído.');
 
     await page.waitForSelector('div[aria-label="Search input textbox"]',  { timeout: 30000 });
-    await page.type(inputSearchEIdentified, GROUP_NAME);
+    await page.type(inputSearchEIdentified, GROUP_NAME, { delay: 100 });
     console.log("DIGITOU O GRUPO NA BUSCA")
 
-    await page.waitForSelector(`span[title='${GROUP_NAME}']`,  { timeout: 30000 })
-    const group = await page.$(`span[title='${GROUP_NAME}']`);
+    // await page.waitForSelector(`span[title='${GROUP_NAME}']`,  { timeout: 30000 })
+    // const group = await page.$(`span[title='${GROUP_NAME}']`);
+
+    const group = await page.waitForSelector('div[role="row"]');
+
     if (group) {
         await group.click();
         console.log("CLICOU NO GROPO")
@@ -56,37 +59,41 @@ const inputSearchEIdentified = 'div[aria-label="Search input textbox"]';
     console.log('SELECIONOU O "GROUP INFO"')
 
     // const moreContacts = await page.waitForSelector('div[data-ignore-capture="any"]');
-    // moreContacts.click();
+    const moreContacts = await page.waitForFunction(() =>  {
+        return document.querySelectorAll('div[data-ignore-capture="any"]')[0];
+    }, { timeout: 30000 });
+    console.log(moreContacts, "IBAG CONTATOS +")
+    moreContacts.click();
     
-    // // await page.waitForSelector(`document.querySelectorAll('div[role="listitem"][style]')`);
-    // await page.waitForFunction(() => {
-    //     const todosContacts = document.querySelectorAll('div[role="listitem"][style]');
-    //     todosContacts.forEach((contato => {
+    // await page.waitForSelector(`document.querySelectorAll('div[role="listitem"][style]')`);
+    await page.waitForFunction(() => {
+        const todosContacts = document.querySelectorAll('div[role="listitem"][style]');
+        todosContacts.forEach((contato => {
 
-    //         try {
+            try {
 
-    //             contato.firstChild.firstChild.lastChild.click();
-    //             console.log('CLICOU NO CONTATO')
+                contato.firstChild.firstChild.lastChild.click();
+                console.log('CLICOU NO CONTATO')
 
-    //             const sendMessageToPeople = document.querySelectorAll('li')[2];
-    //             sendMessageToPeople.click();
-    //             console.log('CLICOU NA TERCEIRA OPCAO')
+                const sendMessageToPeople = document.querySelectorAll('li')[2];
+                sendMessageToPeople.click();
+                console.log('CLICOU NA TERCEIRA OPCAO')
 
-    //             const textboxPrivatePeople = document.querySelectorAll("div[role='textbox']")[1];
-    //             textboxPrivatePeople;
-    //             console.log("SELECIONOU O TEXTBOX INPUT")
+                const textboxPrivatePeople = document.querySelectorAll("div[role='textbox']")[1];
+                textboxPrivatePeople;
+                console.log("SELECIONOU O TEXTBOX INPUT")
 
 
 
-    //         } catch (erro) {
-    //             return;
-    //         }
+            } catch (erro) {
+                return;
+            }
 
-    //         // const _contact = document.querySelectorAll('div[role="listitem"][style]')[6];
+            // const _contact = document.querySelectorAll('div[role="listitem"][style]')[6];
           
 
-    //     }))
-    // })
+        }))
+    })
 
 
 
