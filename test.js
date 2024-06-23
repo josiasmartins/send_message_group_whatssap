@@ -67,37 +67,134 @@ const inputSearchEIdentified = 'div[aria-label="Search input textbox"]';
     moreContacts.click();
 
     console.log("IBAG CONTATOS +");
-    // moreContacts
-    
-    await page.waitForSelector(`document.querySelectorAll('div[role="listitem"][style]')`);
-    await page.waitForFunction(() => {
-        const todosContacts = document.querySelectorAll('div[role="listitem"][style]');
-        todosContacts.forEach((contato => {
 
+    // document.querySelector('div[role="list"]').firstChild.firstChild.firstChild.firstChild.firstChild.click()
+
+    // const todosContacts = document.querySelectorAll('div[role="listitem"][style]');
+    // const todosContacts = await page.waitForFunction(() => document.querySelectorAll('div[role="listitem"]'));
+
+
+    // const todosContacts = await page.waitForFunction(() => document.querySelectorAll('div[role="listitem"]'));
+
+    const todosContacts = await page.$$eval('div[role="listitem"', contatos => {
+        return contatos.map(async contato => {
             try {
 
-                contato.firstChild.firstChild.lastChild.click();
-                console.log('CLICOU NO CONTATO')
-
-                const sendMessageToPeople = document.querySelectorAll('li')[2];
-                sendMessageToPeople.click();
-                console.log('CLICOU NA TERCEIRA OPCAO')
-
-                const textboxPrivatePeople = document.querySelectorAll("div[role='textbox']")[1];
-                textboxPrivatePeople;
-                console.log("SELECIONOU O TEXTBOX INPUT")
-
-
-
+                const _contact = await page.waitForFunction(() => contato.firstChild.firstChild.lastChild);
+                _contact.click();
+        
+               const sendMessageToPeople = await page.waitForFunction(() => document.querySelectorAll('li')[2]);
+               sendMessageToPeople.click();
+        
+        
+               const textboxPrivatePeople = await page.waitForFunction(() => document.querySelectorAll("div[role='textbox']")[1]);
+               textboxPrivatePeople;
+        
+    
+    
+    
+                // contato.firstChild.firstChild.lastChild.click();
+                // console.log('CLICOU NO CONTATO')
+    
+                // const sendMessageToPeople = document.querySelectorAll('li')[2];
+                // sendMessageToPeople.click();
+                // console.log('CLICOU NA TERCEIRA OPCAO')
+    
+                // const textboxPrivatePeople = document.querySelectorAll("div[role='textbox']")[1];
+                // textboxPrivatePeople;
+                // console.log("SELECIONOU O TEXTBOX INPUT")
+    
+    
+    
             } catch (erro) {
+                console.log("DEU ERRO NO CONTATO")
                 return;
             }
+    
+        })
+    })
 
-            // const _contact = document.querySelectorAll('div[role="listitem"][style]')[6];
+    // const todosContacts = await page.waitForSelector(() => document.querySelectorAll('div[role="listitem"][style]'));
+
+    // todosContacts.forEach(async (contato) => {
+
+    // //     const _contact = await page.waitForFunction(() => contato.firstChild.firstChild.lastChild);
+    // //     _contact.click();
+
+    // //    const sendMessageToPeople = await page.waitForFunction(() => document.querySelectorAll('li')[2]);
+    // //    sendMessageToPeople.click();
+
+
+    // //    const textboxPrivatePeople = await page.waitForFunction(() => document.querySelectorAll("div[role='textbox']")[1]);
+    // //    textboxPrivatePeople;
+
+    //     try {
+
+    //         const _contact = await page.waitForFunction(() => contato.firstChild.firstChild.lastChild);
+    //         _contact.click();
+    
+    //        const sendMessageToPeople = await page.waitForFunction(() => document.querySelectorAll('li')[2]);
+    //        sendMessageToPeople.click();
+    
+    
+    //        const textboxPrivatePeople = await page.waitForFunction(() => document.querySelectorAll("div[role='textbox']")[1]);
+    //        textboxPrivatePeople;
+    
+
+
+
+    //         // contato.firstChild.firstChild.lastChild.click();
+    //         // console.log('CLICOU NO CONTATO')
+
+    //         // const sendMessageToPeople = document.querySelectorAll('li')[2];
+    //         // sendMessageToPeople.click();
+    //         // console.log('CLICOU NA TERCEIRA OPCAO')
+
+    //         // const textboxPrivatePeople = document.querySelectorAll("div[role='textbox']")[1];
+    //         // textboxPrivatePeople;
+    //         // console.log("SELECIONOU O TEXTBOX INPUT")
+
+
+
+    //     } catch (erro) {
+    //         console.log("DEU ERRO NO CONTATO")
+    //         return;
+    //     }
+
+
+    // })
+
+    // moreContacts
+    
+    // await page.waitForSelector(`document.querySelectorAll('div[role="listitem"][style]')`);
+    // await page.waitForFunction(() => {
+    //     const todosContacts = document.querySelectorAll('div[role="listitem"][style]');
+    //     todosContacts.forEach((contato => {
+
+    //         try {
+
+    //             contato.firstChild.firstChild.lastChild.click();
+    //             console.log('CLICOU NO CONTATO')
+
+    //             const sendMessageToPeople = document.querySelectorAll('li')[2];
+    //             sendMessageToPeople.click();
+    //             console.log('CLICOU NA TERCEIRA OPCAO')
+
+    //             const textboxPrivatePeople = document.querySelectorAll("div[role='textbox']")[1];
+    //             textboxPrivatePeople;
+    //             console.log("SELECIONOU O TEXTBOX INPUT")
+
+
+
+    //         } catch (erro) {
+    //             return;
+    //         }
+
+    //         // const _contact = document.querySelectorAll('div[role="listitem"][style]')[6];
           
 
-        }))
-    })
+    //     }))
+    // })
 
 
 
