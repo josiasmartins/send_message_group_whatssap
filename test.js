@@ -60,12 +60,16 @@ const inputSearchEIdentified = 'div[aria-label="Search input textbox"]';
 
     // const moreContacts = await page.waitForSelector('div[data-ignore-capture="any"]');
     const moreContacts = await page.waitForFunction(() =>  {
-        return document.querySelectorAll('div[data-ignore-capture="any"]')[0];
-    }, { timeout: 30000 });
-    console.log(moreContacts, "IBAG CONTATOS +")
+        // return document.querySelectorAll('div[data-ignore-capture="any"]')[0].lastChild;
+        return document.querySelectorAll('div[role="button"][data-ignore-capture="any"]')[0];
+    }, { delay: 100 });
+
     moreContacts.click();
+
+    console.log("IBAG CONTATOS +");
+    // moreContacts
     
-    // await page.waitForSelector(`document.querySelectorAll('div[role="listitem"][style]')`);
+    await page.waitForSelector(`document.querySelectorAll('div[role="listitem"][style]')`);
     await page.waitForFunction(() => {
         const todosContacts = document.querySelectorAll('div[role="listitem"][style]');
         todosContacts.forEach((contato => {
