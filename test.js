@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 
-const GROUP_NAME = "🍸𒌋𝑮𝛥𝑳𝛥𝜲";
+const GROUP_NAME = "Canta Brasil";
 const inputSearchEIdentified = 'div[aria-label="Search input textbox"]';
 
 (async () => {
@@ -73,46 +73,31 @@ const inputSearchEIdentified = 'div[aria-label="Search input textbox"]';
     // const todosContacts = document.querySelectorAll('div[role="listitem"][style]');
     // const todosContacts = await page.waitForFunction(() => document.querySelectorAll('div[role="listitem"]'));
 
+    const allContacts = await page.$$('div[role="listitem"]');
+    console.log(`Encontrou ${allContacts.length} contatos`);
 
-    // const todosContacts = await page.waitForFunction(() => document.querySelectorAll('div[role="listitem"]'));
+    for (const contact of allContacts) {
 
-    const todosContacts = await page.$$eval('div[role="listitem"', contatos => {
-        return contatos.map(async contato => {
-            try {
+        if (allContacts[0] == contact) continue;
 
-                const _contact = await page.waitForFunction(() => contato.firstChild.firstChild.lastChild);
-                _contact.click();
-        
-               const sendMessageToPeople = await page.waitForFunction(() => document.querySelectorAll('li')[2]);
-               sendMessageToPeople.click();
-        
-        
-               const textboxPrivatePeople = await page.waitForFunction(() => document.querySelectorAll("div[role='textbox']")[1]);
-               textboxPrivatePeople;
-        
-    
-    
-    
-                // contato.firstChild.firstChild.lastChild.click();
-                // console.log('CLICOU NO CONTATO')
-    
-                // const sendMessageToPeople = document.querySelectorAll('li')[2];
-                // sendMessageToPeople.click();
-                // console.log('CLICOU NA TERCEIRA OPCAO')
-    
-                // const textboxPrivatePeople = document.querySelectorAll("div[role='textbox']")[1];
-                // textboxPrivatePeople;
-                // console.log("SELECIONOU O TEXTBOX INPUT")
-    
-    
-    
-            } catch (erro) {
-                console.log("DEU ERRO NO CONTATO")
-                return;
-            }
-    
-        })
-    })
+        try {
+            await contact.click();
+            console.log('Clicou em um contato');
+
+            const sendMessageToPeople = await page.waitForSelector('li[role="menuitem"]:nth-child(3)', { timeout: 1000 });
+            await sendMessageToPeople.click();
+            console.log("Selecionou a terceira opção");
+
+            const textboxPrivatePeople = await page.waitForSelector("div[role='textbox']", { timeout: 1000 });
+            await textboxPrivatePeople.click();
+            console.log("Selecionou a caixa de mensagem privada");
+
+            // Realize qualquer ação necessária na caixa de mensagem privada
+        } catch (error) {
+            console.log("Erro ao interagir com um contato", error);
+        }
+    }
+
 
     // const todosContacts = await page.waitForSelector(() => document.querySelectorAll('div[role="listitem"][style]'));
 
